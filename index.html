@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mrs. Button's Kitchen</title>
+  <link rel="icon" type="image/svg+xml" href="bunny-icon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="border-top-deco"></div>
+
+<!-- ═══ HEADER ═══ -->
+<header>
+  <div class="header-top">
+    <div class="logo-block" onclick="goPage('home')" style="cursor:pointer;">
+      <span class="logo-pre">Est. 2026 · Recipe Garden</span>
+      <span class="logo-main"><em>Mrs. Button's</em> Kitchen</span>
+      <span class="logo-sub">"Every dish tells a story"</span>
+    </div>
+    <img class="header-deco" src="header-deco.svg" width="72" height="72" alt="bunny chef logo">
+  </div>
+  <nav>
+    <a href="#" class="active" id="nav-home" onclick="goPage('home')">홈</a>
+    <a href="#" id="nav-recipes" onclick="goPage('recipes')">탐색</a>
+    <a href="#" id="nav-discover" onclick="goPage('discover')">추천</a>
+    <a href="#" id="nav-saved" onclick="goPage('saved')">저장됨</a>
+    <a href="#" id="nav-login" class="nav-right" onclick="goPage('login')">로그인</a>
+    <a href="#" id="nav-register" onclick="goPage('register')">회원가입</a>
+    <a href="#" id="nav-user" class="nav-user nav-right" onclick="goPage('profile')" style="display:none;"></a>
+    <a href="#" id="nav-logout" onclick="doLogout()" style="display:none;">로그아웃</a>
+  </nav>
+</header>
+
+<!-- 한 페이지 안에 모든 화면(.page)을 다 넣어두고, script.js의 goPage()가
+     active 클래스만 바꿔서 보여줄 화면을 전환하는 SPA 방식 -->
+<!-- ═══ HOME ═══ -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <span class="hero-badge">모든 요리의 레시피</span>
+    <h1>오늘 만들 요리,<br><em>여기서 찾아보세요</em></h1>
+    <p class="hero-tagline">어떤 요리든 검색하고<br>믿을 수 있는 레시피를 둘러보세요</p>
+    <div class="search-container">
+      <div class="search-frame">
+        <input type="text" id="homeInput" placeholder="예: 떡볶이, 파스타, 된장찌개..."
+               onkeydown="if(event.key==='Enter') doSearch()" />
+        <button class="btn-find" id="homeSBtn" onclick="doSearch()">검색</button>
+      </div>
+      <!-- 추천 검색어 태그: 클릭하면 검색창에 자동 입력되고 바로 검색됨(quick 함수) -->
+      <div class="quick-row">
+        <span class="qtag" onclick="quick('떡볶이')">떡볶이</span>
+        <span class="qtag" onclick="quick('까르보나라')">까르보나라</span>
+        <span class="qtag" onclick="quick('김밥')">김밥</span>
+        <span class="qtag" onclick="quick('볶음밥')">볶음밥</span>
+        <span class="qtag" onclick="quick('삼겹살')">삼겹살</span>
+      </div>
+    </div>
+  </section>
+<div class="results-area" id="homeResults">
+    <div class="empty-zone">
+      <img class="e-icon" src="bunny-icon.svg" alt="bunny">
+      <p class="empty-title">오늘은 어떤 요리를 해볼까요?</p>
+      <p class="empty-sub">검색하면 진짜 레시피를 찾아드려요</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EXPLORE ═══ -->
+<div id="page-recipes" class="page">
+  <div class="page-inner">
+    <h2 class="pg-title">탐색</h2>
+    <p class="pg-desc">어떤 게 먹고 싶은지 골라보세요 — 레시피를 찾아드릴게요</p>
+
+    <!-- 필터 태그: data-query는 실제 검색에 쓰이는 영어 검색어, 화면에는 한글로 보여줌 -->
+    <div class="filter-section">
+      <p class="filter-label">카테고리</p>
+      <div class="filter-tags">
+        <span class="filter-tag" data-query="Korean food" data-group="category" onclick="toggleTag(this)">한식</span>
+        <span class="filter-tag" data-query="Chinese food" data-group="category" onclick="toggleTag(this)">중식</span>
+        <span class="filter-tag" data-query="Japanese food" data-group="category" onclick="toggleTag(this)">일식</span>
+        <span class="filter-tag" data-query="Western food" data-group="category" onclick="toggleTag(this)">양식</span>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <p class="filter-label">지역</p>
+      <div class="filter-tags">
+        <span class="filter-tag" data-query="Korean" data-cuisine="Korean" onclick="toggleCuisine(this)">한국</span>
+        <span class="filter-tag" data-query="Japanese" data-cuisine="Japanese" onclick="toggleCuisine(this)">일본</span>
+        <span class="filter-tag" data-query="Chinese" data-cuisine="Chinese" onclick="toggleCuisine(this)">중국</span>
+        <span class="filter-tag" data-query="Italian" data-cuisine="Italian" onclick="toggleCuisine(this)">이탈리아</span>
+        <span class="filter-tag" data-query="French" data-cuisine="French" onclick="toggleCuisine(this)">프랑스</span>
+        <span class="filter-tag" data-query="American" data-cuisine="American" onclick="toggleCuisine(this)">미국</span>
+        <span class="filter-tag" data-query="Mexican" data-cuisine="Mexican" onclick="toggleCuisine(this)">멕시코</span>
+        <span class="filter-tag" data-query="Indian" data-cuisine="Indian" onclick="toggleCuisine(this)">인도</span>
+        <span class="filter-tag" data-query="Thai" data-cuisine="Thai" onclick="toggleCuisine(this)">태국</span>
+        <span class="filter-tag" data-query="Vietnamese" data-cuisine="Vietnamese" onclick="toggleCuisine(this)">베트남</span>
+        <span class="filter-tag" data-query="Mediterranean" data-cuisine="Mediterranean" onclick="toggleCuisine(this)">그리스</span>
+        <span class="filter-tag" data-query="Middle Eastern" data-cuisine="MiddleEastern" onclick="toggleCuisine(this)">중동</span>
+      </div>
+    </div>
+
+    <!-- 지역(나라)을 선택하면 script.js에서 세부 지역 태그를 여기에 채워줌 -->
+    <div class="filter-section" id="subregionSection" style="display:none;">
+      <p class="filter-label" id="subregionLabel">세부 지역</p>
+      <div class="filter-tags" id="subregionTags"></div>
+    </div>
+
+    <div class="filter-section">
+      <p class="filter-label">식사 종류</p>
+      <div class="filter-tags">
+        <span class="filter-tag" data-query="breakfast" onclick="toggleTag(this)">아침</span>
+        <span class="filter-tag" data-query="lunch" onclick="toggleTag(this)">점심</span>
+        <span class="filter-tag" data-query="dinner" onclick="toggleTag(this)">저녁</span>
+        <span class="filter-tag" data-query="snack" onclick="toggleTag(this)">간식</span>
+        <span class="filter-tag" data-query="dessert" onclick="toggleTag(this)">디저트</span>
+        <span class="filter-tag" data-query="late night food" onclick="toggleTag(this)">야식</span>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <p class="filter-label">조리 시간</p>
+      <div class="filter-tags">
+        <span class="filter-tag" data-query="under 15 minutes quick" onclick="toggleTag(this)">15분 이내</span>
+        <span class="filter-tag" data-query="30 minutes" onclick="toggleTag(this)">30분</span>
+        <span class="filter-tag" data-query="slow cook" onclick="toggleTag(this)">1시간 이상</span>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <p class="filter-label">식단</p>
+      <div class="filter-tags">
+        <span class="filter-tag" data-query="healthy" onclick="toggleTag(this)">건강식</span>
+        <span class="filter-tag" data-query="vegetarian" onclick="toggleTag(this)">베지테리언</span>
+        <span class="filter-tag" data-query="vegan" onclick="toggleTag(this)">비건</span>
+        <span class="filter-tag" data-query="high protein" onclick="toggleTag(this)">고단백</span>
+        <span class="filter-tag" data-query="diet low calorie" onclick="toggleTag(this)">저칼로리</span>
+      </div>
+    </div>
+
+    <button class="btn-find" id="exploreBtn" onclick="doExplore()" style="margin-top:0.5rem;">레시피 찾기</button>
+    <div id="exploreResults" style="margin-top:2.5rem;"></div>
+  </div>
+</div>
+
+<!-- ═══ DISCOVER ═══ -->
+<div id="page-discover" class="page">
+  <section class="hero" style="padding:3.5rem 2rem 3rem;">
+    <span class="hero-badge">오늘의 추천</span>
+    <h1 style="font-size:clamp(28px,4vw,50px)">오늘 뭐 먹을지<br><em>고민되시나요?</em></h1>
+    <p class="hero-tagline">맛있는 메뉴를 대신 골라드릴게요</p>
+    <button class="btn-discover" id="discoverBtn" onclick="doDiscover()">추천 받기</button>
+  </section>
+  <div class="results-area" id="discoverResults">
+    <div class="empty-zone">
+      <img class="e-icon" src="bunny-icon.svg" alt="bunny">
+      <p class="empty-title">준비됐어요</p>
+      <p class="empty-sub">버튼을 누르면 멋진 메뉴를 찾아드려요</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SAVED ═══ -->
+<div id="page-saved" class="page">
+  <div class="page-inner">
+    <h2 class="pg-title">저장한 레시피</h2>
+    <p class="pg-desc">나만의 레시피 모음</p>
+    <div id="savedList"></div>
+  </div>
+</div>
+
+<!-- ═══ PROFILE ═══ -->
+<div id="page-profile" class="page">
+  <div class="reg-wrap">
+    <div class="reg-card">
+      <h2 class="reg-title">내 프로필</h2>
+      <p class="reg-sub">프로필을 수정할 수 있어요</p>
+
+      <!-- 사진 원 영역을 클릭하면 숨겨둔 file input이 클릭되는 구조.
+           실제 업로드 처리(base64로 변환해서 저장)는 script.js의 change 이벤트에서 함 -->
+      <div class="profile-photo-area">
+        <div class="profile-photo-wrap" onclick="document.getElementById('profilePhotoInput').click()">
+          <img id="profilePhotoPreview" class="profile-photo-img" src="" alt="프로필 사진">
+          <span id="profilePhotoPlaceholder" class="profile-photo-placeholder">👤</span>
+          <div class="profile-photo-overlay">사진 변경</div>
+        </div>
+        <input type="file" id="profilePhotoInput" accept="image/*" style="display:none">
+        <p class="profile-photo-hint">클릭해서 사진 등록</p>
+      </div>
+
+      <div class="fg">
+        <label>아이디</label>
+        <input type="text" id="profileId" disabled>
+      </div>
+      <div class="fg">
+        <label for="profileName">이름</label>
+        <input type="text" id="profileName" placeholder="이름을 입력하세요">
+      </div>
+      <div class="fg">
+        <label for="profileEmail">이메일</label>
+        <input type="email" id="profileEmail" placeholder="이메일을 입력하세요">
+      </div>
+      <div class="fg">
+        <label for="profileRegion">지역</label>
+        <select id="profileRegion">
+          <option value="">선택하세요</option>
+          <option>서울</option><option>경기</option><option>인천</option>
+          <option>부산</option><option>대구</option><option>광주</option>
+          <option>대전</option><option>울산</option><option>세종</option>
+          <option>강원</option><option>충북</option><option>충남</option>
+          <option>전북</option><option>전남</option><option>경북</option>
+          <option>경남</option><option>제주</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label for="profileBio">한줄 소개</label>
+        <textarea id="profileBio" class="memo-area" rows="3" placeholder="나를 소개해보세요..." style="min-height:80px;"></textarea>
+      </div>
+
+      <button class="btn-join" onclick="saveProfile()">저장하기</button>
+      <p id="profileSaveMsg" style="display:none;text-align:center;margin-top:1rem;font-family:'Quicksand','Gowun Dodum',sans-serif;color:var(--sage-dk);font-size:15px;">✓ 저장되었습니다</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="page-login" class="page">
+  <div class="reg-wrap">
+    <div class="reg-card">
+      <div id="loginForm">
+        <h2 class="reg-title">다시 만나서 반가워요</h2>
+        <p class="reg-sub">키친 계정으로 로그인하세요</p>
+        <div class="fg">
+          <label for="li">아이디</label>
+          <input type="text" id="li" placeholder="아이디를 입력하세요" />
+          <p class="ferr" id="eli">아이디를 입력해주세요</p>
+        </div>
+        <div class="fg">
+          <label for="lp">비밀번호</label>
+          <input type="password" id="lp" placeholder="비밀번호를 입력하세요" />
+          <p class="ferr" id="elp">비밀번호를 입력해주세요</p>
+        </div>
+        <button class="btn-join" onclick="doLogin()">로그인</button>
+        <p style="text-align:center;margin-top:1.2rem;font-family:'Quicksand','Gowun Dodum',sans-serif;font-size:15px;color:var(--muted);">
+          아직 회원이 아니신가요?
+          <a href="#" onclick="goPage('register')" style="color:var(--warm-dk);text-decoration:none;">회원가입</a>
+        </p>
+      </div>
+      <div class="reg-success" id="loginOk" style="display:none;">
+        <img class="sicon" src="bunny-icon.svg" alt="bunny">
+        <p>Mrs. Button's Kitchen에 다시 오신 것을 환영해요!</p>
+        <small>오늘도 맛있는 요리를 찾아볼까요?</small>
+        <br><br>
+        <button class="btn-find" style="padding:10px 28px;" onclick="goPage('home')">홈으로 돌아가기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ JOIN US ═══ -->
+<div id="page-register" class="page">
+  <div class="reg-wrap">
+    <div class="reg-card">
+      <div id="regForm">
+        <h2 class="reg-title">키친에 가입하기</h2>
+        <p class="reg-sub">회원가입하고 좋아하는 레시피를 저장해보세요</p>
+        <!-- fieldset/legend로 계정 정보 / 개인 정보를 묶어서 폼을 그룹화 -->
+        <fieldset class="form-fieldset">
+          <legend>계정 정보</legend>
+          <div class="fg">
+            <label for="ri">아이디 *</label>
+            <input type="text" id="ri" placeholder="영문·숫자 4~12자" />
+            <p class="ferr" id="ei">아이디는 영문 또는 숫자 4~12자로 입력해주세요</p>
+          </div>
+          <div class="fg">
+            <label for="rp">비밀번호 *</label>
+            <input type="password" id="rp" placeholder="8자 이상" />
+            <p class="ferr" id="ep">비밀번호는 8자 이상이어야 합니다</p>
+          </div>
+          <div class="fg">
+            <label for="rp2">비밀번호 확인 *</label>
+            <input type="password" id="rp2" placeholder="비밀번호 재입력" />
+            <p class="ferr" id="ep2">비밀번호가 일치하지 않습니다</p>
+          </div>
+        </fieldset>
+        <fieldset class="form-fieldset">
+          <legend>개인 정보</legend>
+          <div class="frow">
+            <div class="fg">
+              <label for="rn">이름 *</label>
+              <input type="text" id="rn" placeholder="홍길동" />
+              <p class="ferr" id="en">이름을 입력해주세요</p>
+            </div>
+            <div class="fg">
+              <label for="rb">생년월일</label>
+              <input type="date" id="rb" />
+            </div>
+          </div>
+          <div class="fg">
+            <label for="re">이메일 *</label>
+            <input type="email" id="re" placeholder="example@email.com" />
+            <p class="ferr" id="ee">올바른 이메일 형식을 입력해주세요</p>
+          </div>
+          <div class="fg">
+            <label for="rr">지역</label>
+            <select id="rr">
+              <option value="">선택하세요</option>
+              <option>서울</option><option>경기</option><option>인천</option>
+              <option>부산</option><option>대구</option><option>광주</option>
+              <option>대전</option><option>울산</option><option>세종</option>
+              <option>강원</option><option>충북</option><option>충남</option>
+              <option>전북</option><option>전남</option><option>경북</option>
+              <option>경남</option><option>제주</option>
+            </select>
+          </div>
+        </fieldset>
+        <button class="btn-join" onclick="doRegister()">가입 완료하기</button>
+      </div>
+      <div class="reg-success" id="regOk">
+        <img class="sicon" src="bunny-icon.svg" alt="bunny">
+        <p>Mrs. Button's Kitchen에 오신 것을 환영해요!</p>
+        <small>이제 맛있는 요리를 시작해볼까요?</small>
+        <br><br>
+        <button class="btn-find" style="padding:10px 28px;" onclick="goPage('home')">홈으로 돌아가기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <strong>Mrs. Button's Kitchen</strong> &nbsp;·&nbsp;
+  <em>20261234 박찬미</em> &nbsp;·&nbsp;
+  웹프로그래밍기초 과제
+</footer>
+
+<!-- 레시피 카드를 클릭하면 script.js가 이 빈 박스(#mInner) 안에
+     내용을 채워서 모달로 보여주는 구조. 배경(#mBg) 클릭하거나 ESC 누르면 닫힘 -->
+<!-- ═══ MODAL ═══ -->
+<div class="modal-bg" id="mBg" onclick="closeMod(event)">
+  <div class="modal" id="mInner"></div>
+</div>
+
+<script src="config.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
